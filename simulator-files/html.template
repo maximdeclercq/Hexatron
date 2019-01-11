@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  </head>
+  <body style="font-family: sans-serif; text-align: center;">
+    <p style="margin: 20px 0;">Replay for <span style="color: #8dd4e0; font-weight: 700;">{{AGENT_1}}</span> vs. <span style="color: #f8c633; font-weight: 700;">{{AGENT_2}}</span>.
+    <div id="main"></div>
+    <div style="margin: 20px 0;">
+      <button id="backward">Backward</button>
+      <button id="forward">Forward</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script>
+      "use strict";class HexagonGrid{constructor(t,e,i={}){this.gridSize=e,this.halfSize=Math.floor(e/2),this.drawCorners=i.drawCorners||!1,this.drawText=i.drawText||!1,i.elemWidth?(this.hexagonWidth=(i.elemWidth-10)/(this.gridSize+this.halfSize),this.hexagonSize=this.hexagonWidth/Math.sqrt(3)):i.hexagonWidth?(this.hexagonWidth=i.hexagonWidth,this.hexagonSize=this.hexagonWidth/Math.sqrt(3)):(this.hexagonSize=Math.floor(.6*window.innerWidth/e/2),this.hexagonWidth=Math.sqrt(3)*this.hexagonSize),this.hexagonHeight=2*this.hexagonSize,this.textSize=.8*this.hexagonSize,this.elem=d3.select(t).append("svg").attr("width",10+e*this.hexagonWidth+this.halfSize*this.hexagonWidth).attr("height",10+1*this.hexagonHeight/4+e*this.hexagonHeight*3/4),this._hexagonPathGenerator=d3.line().x(t=>t.x).y(t=>t.y),this._trianglePathGenerator=d3.symbol().type(d3.symbolTriangle).size(3*this.hexagonHeight),this._draw()}_getPoints(t,e){return[...Array(7).keys()].map(i=>{const r=(60*i-30)*Math.PI/180;return{x:t+this.hexagonSize*Math.cos(r),y:e+this.hexagonSize*Math.sin(r)}})}_isCornerCell(t,e){return t+e<this.halfSize||t+e>=this.gridSize+this.halfSize}_draw(){this.grid=[];for(let t=0;t<this.gridSize;t++){const e=[],i=this.hexagonHeight/2+5+t*this.hexagonHeight*3/4,r=t*this.hexagonWidth/2;for(let h=0;h<this.gridSize;h++){if(this._isCornerCell(t,h)&&!this.drawCorners){e.push(null);continue}const a=this.hexagonWidth/2+5+h*this.hexagonWidth,s=this._getPoints(a+r,i),o=this.elem.append("path").attr("d",this._hexagonPathGenerator(s)).attr("stroke","grey").attr("stroke-width",2).attr("fill",()=>this._isCornerCell(t,h)?"#ff9482":"none");e.push({x:a+r,y:i,hexagon:o}),this.drawText&&this.elem.append("text").attr("x",a+r).attr("y",i).attr("font-family","sans-serif").attr("font-size","12px").attr("text-anchor","middle").attr("dominant-baseline","middle").text(`${t},${h}`)}this.grid.push(e)}}setTrajectories(t){this.trajectories=t,this.trajectoryIndex=0,this.trajectorySize=t[0].length,this._drawTrajectories()}_clearTrajectories(){this.elem.selectAll(".intention").remove();for(let t=0;t<this.gridSize;t++)for(let e=0;e<this.gridSize;e++)this._isCornerCell(t,e)||this.grid[t][e].hexagon.attr("fill","none")}_drawTrajectory(t,e,i,r,h){let a=0;for(;a<=this.trajectoryIndex&&a<this.trajectorySize-1;){const s=t[a],o=this.grid[s.y][s.x];let n=e;0==a?n=i:a==this.trajectorySize-2&&(n=r),o.hexagon.attr("fill",n);const d=60*t[a+1].orientation-120;this.elem.append("text").attr("class","intention").attr("font-family","FontAwesome").attr("font-size",`${this.textSize}px`).attr("text-anchor","middle").attr("dominant-baseline","middle").attr("transform",`translate(${o.x}, ${o.y}), rotate(${d})`).attr("fill",h).text(""),a++}}_drawTrajectories(){this._clearTrajectories(),this._drawTrajectory(this.trajectories[0],"#8dd4e0","#5aa1ad","#daffff","#276e7a"),this._drawTrajectory(this.trajectories[1],"#f8c633","#c59200","#ffec59","#926000")}trajectoryForward(){this.trajectoryIndex<this.trajectorySize-2&&(this.trajectoryIndex++,this._drawTrajectories())}trajectoryBackward(){this.trajectoryIndex>0&&(this.trajectoryIndex--,this._drawTrajectories())}trajectoryBegin(){this.trajectoryIndex=0,this._drawTrajectories()}trajectoryEnd(){this.trajectoryIndex=this.trajectorySize-1,this._drawTrajectories()}}
+    </script>
+    <script>const trajectories = {{GENERATED_TRAJECTORY}};</script>
+    <script>
+      const replay = new HexagonGrid('#main', 13);
+      replay.setTrajectories(trajectories);
+
+      document.getElementById('forward').addEventListener('click', () => replay.trajectoryForward());
+      document.getElementById('backward').addEventListener('click', () => replay.trajectoryBackward());
+    </script>
+  </body>
+</html>

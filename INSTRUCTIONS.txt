@@ -1,0 +1,24 @@
+HOW TO RUN A SIMULATION WITH YOUR OWN AGENT?
+--------------------------------------------
+
+[IMPORTANT] Do not modify any of the files provided.
+
+1. In this directory, create a Python 3 file, containing your agent code.
+   An example is provided by `simulator-files/example_agent.py`.
+
+2. Using a terminal (command window), navigate to this directory.
+
+3. Run a simulation, using your agent. In the terminal, type
+
+        python simulator.py [agent_one] [agent_two]
+
+   or,
+
+        python3 simulator.py [agent_one] [agent_two]
+
+   depending on your system; e.g.
+
+       python simulator.py example_agent example_agent
+
+4. A replay will be written to `replays/replay{time_id}.html`.
+   Open this file in your browser to view the replay.
